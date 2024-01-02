@@ -4,10 +4,6 @@ import bcrypt from "bcrypt";
 
 const User = mongoose.Schema(
   {
-    name: {
-      type: String,
-      required: true,
-    },
     email: {
       type: String,
       required: [true, "Email is required"],
@@ -33,6 +29,9 @@ const User = mongoose.Schema(
 );
 
 User.pre("save", async function (next) {
+  if (!this.isModified("password")) {
+    return next();
+  }
   try {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(this.password, salt);
@@ -42,5 +41,17 @@ User.pre("save", async function (next) {
     next(error);
   }
 });
+
+User.statics.login = async function (email, password) {
+  const user = await this.findOne({ email });
+  if (user) {
+    const auth = await bcrypt.compare(password, user.password);
+    if (auth) {
+      return user;
+    }
+    throw Error("incorrect password");
+  }
+  throw Error("incorrect email");
+};
 
 export default mongoose.model("Users", User);

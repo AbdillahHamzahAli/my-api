@@ -2,8 +2,9 @@ import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
 import bodyParser from "body-parser";
+import cookieParser from "cookie-parser";
 import CONFIG from "./config/environments.js";
-import UserRoute from "./routes/UserRoute.js";
+import AuthRoute from "./routes/AuthRoute.js";
 
 const app = express();
 const PORT = CONFIG.port || 3000;
@@ -13,9 +14,10 @@ app.use(cors());
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.use(cookieParser());
 
 // Route
-app.use(UserRoute);
+app.use(AuthRoute);
 
 // Database Connection
 mongoose
