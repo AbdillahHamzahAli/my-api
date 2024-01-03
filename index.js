@@ -5,6 +5,7 @@ import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import CONFIG from "./config/environments.js";
 import AuthRoute from "./routes/AuthRoute.js";
+import TagRoute from "./routes/TagRoute.js";
 
 const app = express();
 const PORT = CONFIG.port || 3000;
@@ -18,10 +19,11 @@ app.use(cookieParser());
 
 // Route
 app.use(AuthRoute);
+app.use(TagRoute);
 
 // Database Connection
 mongoose
-  .connect(`${CONFIG.db}`, { useNewUrlParser: true, useUnifiedTopology: true })
+  .connect(`${CONFIG.db}`)
   .then(() => {
     console.log("Connected to MongoDB");
     // Start Server
