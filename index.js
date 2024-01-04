@@ -6,6 +6,7 @@ import cookieParser from "cookie-parser";
 import CONFIG from "./config/environments.js";
 import AuthRoute from "./routes/AuthRoute.js";
 import TagRoute from "./routes/TagRoute.js";
+import PostRoute from "./routes/PostRoute.js";
 
 const app = express();
 const PORT = CONFIG.port || 3000;
@@ -20,6 +21,7 @@ app.use(cookieParser());
 // Route
 app.use(AuthRoute);
 app.use(TagRoute);
+app.use(PostRoute);
 
 // Database Connection
 mongoose
