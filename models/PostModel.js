@@ -1,16 +1,11 @@
 import mongoose from "mongoose";
-import { validatePostTitle } from "../validators/PostValidator.js";
 
 const postSchema = mongoose.Schema(
   {
     title: {
       type: String,
       required: true,
-      maxLenght: [70, "max post title lenght is 70 characters"],
-      validate: {
-        validator: validatePostTitle,
-        message: "max post title lenght is 70 characters",
-      },
+      maxLenght: 70,
     },
     slug: {
       type: String,
@@ -25,6 +20,7 @@ const postSchema = mongoose.Schema(
     description: {
       type: String,
       required: true,
+      maxLenght: 150,
     },
     content: {
       type: String,

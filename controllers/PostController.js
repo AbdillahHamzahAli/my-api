@@ -1,4 +1,3 @@
-import handleErrors from "../helper/PostErrorHandler.js";
 import Post from "../models/PostModel.js";
 
 export const getAllPost = async (req, res) => {
@@ -21,12 +20,20 @@ export const getPostBySlug = async (req, res) => {
 // SavePost
 export const savePost = async (req, res) => {
   const { body, file } = req;
-  const post = new Post({ ...body });
+  const post = new Post({ ...body, thumbnail: file ? file.path : "" });
   try {
     const insertPost = await post.save();
     res.status(201).json(insertPost);
   } catch (error) {
-    const errors = handleErrors(error);
-    res.status(400).json({ errors });
+    res.status(400).json({ message: error.message });
+  }
+};
+//   Delete
+export const deletePost = async (req, res) => {
+  try {
+    const deletedPost = await Post.deleteOne({ slug: req.params.slug });
+    res.status(200).json(deletedPost);
+  } catch (error) {
+    res.status(204).json({ message: error.message });
   }
 };
