@@ -1,8 +1,10 @@
 import * as fs from "node:fs";
 import { body, validationResult } from "express-validator";
-import Post from "../models/PostModel.js";
+import Post from "../../models/PostModel.js";
 
 export const postValidationRules = [
+  // Title
+  body("title").isString().withMessage("Title must be a string").notEmpty().withMessage("Title cannot be empty").isLength({ max: 70 }).withMessage("Maximum title length is 70 characters"),
   // Slug
   body("slug")
     .notEmpty()
@@ -12,13 +14,10 @@ export const postValidationRules = [
         slug: value,
       }).then((post) => {
         if (post.length > 0) {
-          return Promise.reject("Title already in use");
+          return Promise.reject("Slug already in use");
         }
       });
     }),
-  // Title
-  body("title").isString().withMessage("Title must be a string").notEmpty().withMessage("Title cannot be empty").isLength({ max: 70 }).withMessage("Maximum title length is 70 characters"),
-
   //   Thumbnail
   body("thumbnail").optional().isString().withMessage("Thumbnail must be a string"),
   // Description
@@ -39,14 +38,11 @@ export const validate = (req, res, next) => {
     if (req.file && req.file.path) {
       try {
         fs.unlinkSync(req.file.path);
-        // Handle kesalahan penghapusan file
         console.log(`Berhasil dihapus: ${req.file.path}`);
-      } catch (unlinkError) {
-        // Handle kesalahan penghapusan file
-        console.error(`Gagal menghapus file: ${unlinkError.message} ${req.file.path}`);
+      } catch (error) {
+        console.error(`Gagal menghapus file: ${error.message} ${req.file.path}`);
       }
     }
-
     const extractedErrors = [];
     errors.array().map((err) => extractedErrors.push({ [err.path]: err.msg }));
 
@@ -55,7 +51,6 @@ export const validate = (req, res, next) => {
     });
   }
 };
-// export const validate = (req, res, next) => {
 //   const errors = validationResult(req);
 //   if (!errors.isEmpty()) {
 //     return res.status(400).json({ success: false, errors: errors.array() });
