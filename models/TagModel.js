@@ -4,7 +4,7 @@ const TagSchema = mongoose.Schema(
   {
     name: {
       type: String,
-      required: [true, "please enter tag name"],
+      required: true,
       unique: true,
       index: true,
       lowercase: true,
