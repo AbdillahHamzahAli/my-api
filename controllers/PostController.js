@@ -1,4 +1,5 @@
 import Post from "../models/PostModel.js";
+import * as fs from "node:fs";
 
 export const getAllPost = async (req, res) => {
   try {
@@ -28,7 +29,19 @@ export const savePost = async (req, res) => {
     res.status(400).json({ message: error.message });
   }
 };
-//   Delete
+// Update Post
+export const updatePost = async (req, res) => {
+  const { body, file } = req;
+  try {
+    const updateData = file ? { ...body, thumbnail: file.path } : { ...body };
+    const updatedPost = await Post.updateOne({ slug: req.params.slug }, updateData);
+    res.status(201).json(updatedPost);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
+// Delete
 export const deletePost = async (req, res) => {
   try {
     const deletedPost = await Post.deleteOne({ slug: req.params.slug });
