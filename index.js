@@ -7,7 +7,7 @@ import CONFIG from "./config/environments.js";
 import AuthRoute from "./routes/AuthRoute.js";
 import TagRoute from "./routes/TagRoute.js";
 import PostRoute from "./routes/PostRoute.js";
-import multerStorage from "./middleware/multerStorage.js";
+import { Auth, checkUser } from "./middleware/AuthMiddleware.js";
 
 import path from "path";
 import { fileURLToPath } from "url";
@@ -23,9 +23,10 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(express.json());
 app.use(cookieParser());
-// app.use(multerStorage);
+app.get("*", checkUser);
 
 // Route
+app.use(Auth);
 app.use(AuthRoute);
 app.use(TagRoute);
 app.use(PostRoute);

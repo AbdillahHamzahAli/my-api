@@ -21,7 +21,7 @@ export const SignUp = async (req, res) => {
     res.status(400).json({ errors });
   }
 };
-
+// Login
 export const Login = async (req, res) => {
   const { email, password } = req.body;
   try {
@@ -34,7 +34,11 @@ export const Login = async (req, res) => {
     res.status(400).json({ errors });
   }
 };
-
+// Logout
+export const Logout = async (req, res) => {
+  res.cookie("jwt", "", { maxAge: 1 });
+  res.status(440).json({ logout: "yes" });
+};
 export const getUsers = async (req, res) => {
   try {
     const users = await User.find();
