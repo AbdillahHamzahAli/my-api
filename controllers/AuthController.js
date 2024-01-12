@@ -17,8 +17,7 @@ export const SignUp = async (req, res) => {
     res.cookie("jwt", token, { httpOnly: true, maxAge: maxAge * 1000 });
     res.status(201).json(insertUser);
   } catch (error) {
-    const errors = UserErrorHandler(error);
-    res.status(400).json({ errors });
+    res.status(500).json({ message: error.message });
   }
 };
 // Login
@@ -30,8 +29,7 @@ export const Login = async (req, res) => {
     res.cookie("jwt", token, { httpOnly: true, maxAge: maxAge * 1000 });
     res.json(user);
   } catch (error) {
-    const errors = UserErrorHandler(error);
-    res.status(400).json({ errors });
+    res.status(500).json({ message: error.message });
   }
 };
 // Logout
@@ -50,11 +48,10 @@ export const getUsers = async (req, res) => {
 
 export const updateUser = async (req, res) => {
   try {
-    const updatedUser = await User.updateOne({ _id: req.params.id }, { $set: req.body });
+    const updatedUser = await User.update(req);
     res.status(201).json(updatedUser);
   } catch (error) {
-    const errors = UserErrorHandler(error);
-    res.status(400).json({ errors });
+    res.status(500).json({ message: error.message });
   }
 };
 
