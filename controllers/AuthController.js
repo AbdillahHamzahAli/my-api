@@ -1,5 +1,4 @@
 import User from "../models/UserModel.js";
-import UserErrorHandler from "../helper/UserErrorHandler.js";
 import jwt from "jsonwebtoken";
 import CONFIG from "../config/environments.js";
 
