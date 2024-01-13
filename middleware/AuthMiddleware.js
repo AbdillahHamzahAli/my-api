@@ -13,14 +13,14 @@ export const Auth = (req, res, next) => {
     jwt.verify(token, `${CONFIG.privateKey}`, (err, decodedToken) => {
       if (err) {
         console.error(err.message);
-        res.status(401).redirect("/login");
+        res.status(401).json({ message: "method not allowed" });
       } else {
-        console.log(decodedToken);
+        // console.log(decodedToken);
         next();
       }
     });
   } else {
-    res.status(401).redirect("/login");
+    res.status(401).json({ message: "method not allowed" });
   }
 };
 
