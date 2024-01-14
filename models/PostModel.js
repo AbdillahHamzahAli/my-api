@@ -33,7 +33,7 @@ const postSchema = mongoose.Schema(
     tags: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Tag",
+        ref: "Tags",
       },
     ],
   },
