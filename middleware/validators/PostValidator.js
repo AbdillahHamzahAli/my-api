@@ -60,23 +60,21 @@ export const updateValidationRules = [
 export const validate = async (req, res, next) => {
   try {
     validationResult(req).throw();
-    const oldPost = await Post.findOne({ slug: req.params.slug });
-    // console.log("oldpost ->" + oldPost.thumbnail);
-    if (req.file && oldPost.thumbnail != "") {
-      fs.unlinkSync(oldPost.thumbnail);
+    if (req.params.slug) {
+      const oldPost = await Post.findOne({ slug: req.params.slug });
+      if (req.file && oldPost.thumbnail != "") {
+        fs.unlinkSync(oldPost.thumbnail);
+      }
     }
     next();
   } catch (errors) {
     if (req.file && req.file.path) {
       fs.unlinkSync(req.file.path);
-      // console.log(`Berhasil dihapus: ${req.file.path}`);
     }
     const extractedErrors = [];
     errors.array().map((err) => extractedErrors.push({ [err.path]: err.msg }));
 
-    return res.status(400).json({
-      errors: extractedErrors,
-    });
+    return res.status(400).json({ errors: extractedErrors });
   }
 };
 //   const errors = validationResult(req);
