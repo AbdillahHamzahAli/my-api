@@ -1,5 +1,6 @@
 import Post from "../models/PostModel.js";
 import Tag from "../models/TagModel.js";
+import * as fs from "node:fs";
 
 // Get  Post
 export const getPosts = async (req, res) => {
@@ -55,7 +56,9 @@ export const updatePost = async (req, res) => {
 // Delete
 export const deletePost = async (req, res) => {
   try {
-    const deletedPost = await Post.deleteOne({ slug: req.params.slug });
+    const deletedPost = await Post.findOneAndDelete({ slug: req.params.slug });
+    fs.unlinkSync(deletedPost.thumbnail);
+
     res.status(200).json(deletedPost);
   } catch (error) {
     res.status(204).json({ message: error.message });
