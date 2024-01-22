@@ -3,7 +3,7 @@ import CONFIG from "../config/environments.js";
 import User from "../models/UserModel.js";
 
 export const Auth = (req, res, next) => {
-  if (req.path === "/login" || req.path === "/signup" || req.method === "GET") {
+  if (req.path === "/login" || req.path === "/signup" || (req.method === "GET" && req.path !== "/users")) {
     return next();
   }
 
