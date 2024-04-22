@@ -1,7 +1,6 @@
 import express from "express";
 import { deletePost, getPosts, getPostBySlug, savePost, updatePost } from "../controllers/PostController.js";
 import { postValidationRules, updateValidationRules, validate } from "../middleware/validators/PostValidator.js";
-import multerStorage from "../middleware/multerStorage.js";
 const router = express.Router();
 
 router.get("/posts", getPosts);
