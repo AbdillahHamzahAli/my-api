@@ -32,8 +32,7 @@ export const getPostBySlug = async (req, res) => {
 };
 // SavePost
 export const savePost = async (req, res) => {
-  const { body, file } = req;
-  const post = new Post({ ...body, thumbnail: file ? file.path : "" });
+  const post = new Post(req.body);
   try {
     const insertPost = await post.save();
     res.status(201).json(insertPost);
@@ -43,10 +42,8 @@ export const savePost = async (req, res) => {
 };
 // Update Post
 export const updatePost = async (req, res) => {
-  const { body, file } = req;
   try {
-    const updateData = file ? { ...body, thumbnail: file.path } : { ...body };
-    const updatedPost = await Post.updateOne({ slug: req.params.slug }, updateData);
+    const updatedPost = await Post.updateOne({ slug: req.params.slug }, { $set: req.body });
     res.status(201).json(updatedPost);
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -56,10 +53,10 @@ export const updatePost = async (req, res) => {
 // Delete
 export const deletePost = async (req, res) => {
   try {
-    const deletedPost = await Post.findOneAndDelete({ slug: req.params.slug });
-    fs.unlinkSync(deletedPost.thumbnail);
-
-    res.status(200).json(deletedPost);
+    await Post.deleteOne({ slug: req.params.slug });
+    res.status(200).json({
+      data: "OK",
+    });
   } catch (error) {
     res.status(204).json({ message: error.message });
   }

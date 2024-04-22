@@ -6,8 +6,8 @@ const router = express.Router();
 
 router.get("/posts", getPosts);
 router.get("/posts/:slug", getPostBySlug);
-router.post("/posts", [multerStorage, postValidationRules, validate], savePost); //
-router.patch("/posts/:slug", [multerStorage, updateValidationRules, validate], updatePost);
+router.post("/posts", [postValidationRules, validate], savePost); //
+router.patch("/posts/:slug", [updateValidationRules, validate], updatePost);
 router.delete("/posts/:slug", deletePost);
 
 export default router;

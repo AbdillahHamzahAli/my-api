@@ -57,47 +57,35 @@ export const updateValidationRules = [
   body("tags").optional().isMongoId().withMessage("Tag must be a MongoDB ID"),
 ];
 
-export const validate = async (req, res, next) => {
+export const validate = (req, res, next) => {
   try {
     validationResult(req).throw();
-    if (req.params.slug) {
-      const oldPost = await Post.findOne({ slug: req.params.slug });
-      if (req.file && oldPost.thumbnail != "") {
-        fs.unlinkSync(oldPost.thumbnail);
-      }
-    }
     next();
   } catch (errors) {
-    if (req.file && req.file.path) {
-      fs.unlinkSync(req.file.path);
-    }
-    const extractedErrors = [];
-    errors.array().map((err) => extractedErrors.push({ [err.path]: err.msg }));
-
-    return res.status(400).json({ errors: extractedErrors });
+    const formattedErrors = {};
+    errors.array().forEach((err) => {
+      formattedErrors[err.path] = err.msg;
+    });
+    return res.status(400).json({ errors: formattedErrors });
   }
 };
-//   const errors = validationResult(req);
-//   if (!errors.isEmpty()) {
-//     return res.status(400).json({ success: false, errors: errors.array() });
-//   }
-//   return next();
-// };
-// const validator = (req, res, next) => {
-//     try {
-//       validationResult(req).throw();
-
-//       // continue to next middleware
-//       next();
-//     } catch (errors) {
-//       fs.unlink(req.file.path, (err) => {
-//         if (err) {multipart/form-data
-//           /* HANLDE ERROR */
-//         }
-//         console.log(`successfully deleted ${req.file.path}`);
-//       });
-
-//       // return bad request
-//       res.status(400).send(errors);
+// export const validate = async (req, res, next) => {
+//   try {
+//     validationResult(req).throw();
+//     if (req.params.slug) {
+//       const oldPost = await Post.findOne({ slug: req.params.slug });
+//       if (req.file && oldPost.thumbnail != "") {
+//         fs.unlinkSync(oldPost.thumbnail);
+//       }
 //     }
-//   };
+//     next();
+//   } catch (errors) {
+//     if (req.file && req.file.path) {
+//       fs.unlinkSync(req.file.path);
+//     }
+//     const extractedErrors = [];
+//     errors.array().map((err) => extractedErrors.push({ [err.path]: err.msg }));
+
+//     return res.status(400).json({ errors: extractedErrors });
+//   }
+// };
