@@ -9,11 +9,6 @@ import TagRoute from "./routes/TagRoute.js";
 import PostRoute from "./routes/PostRoute.js";
 import { Auth, checkUser } from "./middleware/AuthMiddleware.js";
 
-import path from "path";
-import { fileURLToPath } from "url";
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
 const app = express();
 const PORT = CONFIG.port || 3000;
 
@@ -30,7 +25,6 @@ app.use(Auth);
 app.use(AuthRoute);
 app.use(TagRoute);
 app.use(PostRoute);
-app.use("/storage/images", express.static(path.join(__dirname, "/storage/images")));
 
 // Database Connection
 mongoose
